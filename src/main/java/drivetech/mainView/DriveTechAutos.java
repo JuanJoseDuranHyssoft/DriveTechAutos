@@ -3,7 +3,6 @@
  */
 
 package drivetech.mainView;
-import Users.UsersView;
 import Users.LoginView;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
@@ -30,7 +29,5 @@ public class DriveTechAutos {
         mainView.setVisible(true);
         loginView.setVisible(true);
 
-        // UsersView vista = new UsersView();
-        // vista.mostrarMenu();
     }
 }
