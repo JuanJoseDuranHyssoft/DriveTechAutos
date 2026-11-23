@@ -1,4 +1,5 @@
 Empleado\EmpleadoDto.class
+Venta\VentasView$1.class
 Cliente\ClienteController.class
 Users\LoginView$2.class
 Categoria\CategoriaController.class
@@ -24,6 +25,7 @@ MetodoPago\MetodoPagoDto.class
 Users\LoginView.class
 Users\UsersView.class
 drivetech\mainView\DriveTechAutosMain$1.class
+Venta\VentasView$2.class
 Cliente\ClienteModel.class
 Users\LoginView$1.class
 MetodoPago\MetodoPagoModel.class
