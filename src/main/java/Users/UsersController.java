@@ -16,71 +16,71 @@ public class UsersController {
         this.usersModel = new UsersModel();
     }
 
-    public boolean addUsuario(UsersDto userDto) {
+    public boolean addUser(UsersDto userDto) {
         try {
-            return usersModel.addUsuario(userDto);
+            return usersModel.addUser(userDto);
         } catch (Exception ex) {
-            System.out.println("Error en UsuarioController.addUsuario: " + ex.getLocalizedMessage());
+            System.out.println("Error in UsersController.addUser: " + ex.getLocalizedMessage());
             return false;
         }
     }
 
-    public boolean updateUsuario(UsersDto userDto) {
+    public boolean updateUser(UsersDto userDto) {
         try {
-            return usersModel.updateUsuario(userDto);
+            return usersModel.updateUser(userDto);
         } catch (Exception ex) {
-            System.out.println("Error en UsuarioController.updateUsuario: " + ex.getLocalizedMessage());
+            System.out.println("Error in UsersController.updateUser: " + ex.getLocalizedMessage());
             return false;
         }
     }
 
-    public boolean deleteUsuario(int userId) {
+    public boolean deleteUser(int userId) {
         try {
-            return usersModel.deleteUsuario(userId);
+            return usersModel.deleteUser(userId);
         } catch (Exception ex) {
-            System.out.println("Error en UsuarioController.deleteUsuario: " + ex.getLocalizedMessage());
+            System.out.println("Error in UsersController.deleteUser: " + ex.getLocalizedMessage());
             return false;
         }
     }
 
-    public UsersDto getUsuario(int userId) {
+    public UsersDto getUser(int userId) {
         try {
-            return usersModel.getUsuario(userId);
+            return usersModel.getUser(userId);
         } catch (Exception ex) {
-            System.out.println("Error en UsuarioController.getUsuario: " + ex.getLocalizedMessage());
+            System.out.println("Error in UsersController.getUser: " + ex.getLocalizedMessage());
             return null;
         }
     }
 
-    public List<UsersDto> getAllUsuarios() {
+    public List<UsersDto> getAllUsers() {
         try {
-            return usersModel.getAllUsuarios();
+            return usersModel.getAllUsers();
         } catch (Exception ex) {
-            System.out.println("Error en UsuarioController.getAllUsuarios: " + ex.getLocalizedMessage());
+            System.out.println("Error in UsersController.getAllUsers: " + ex.getLocalizedMessage());
             return null;
         }
     }
 
-    public UsersDto login(String email, String contrasenia) throws Exception {
+    public UsersDto login(String email, String password) throws Exception {
 
-        UsersDto usuario = usersModel.getUsuarioByEmail(email);
+        UsersDto user = usersModel.getUserByEmail(email);
         
-        if (usuario == null) {
+        if (user == null) {
             throw new Exception("El correo ingresado no existe en el sistema.");
         }
         
-        if (!usuario.getContrasenia().equals(contrasenia)) {
+        if (!user.getPassword().equals(password)) {
             throw new Exception("Contraseña incorrecta.");
         }
         
-        return usuario;
+        return user;
     }
 
-    public boolean existsUsuario(int userId) {
+    public boolean existsUser(int userId) {
         try {
-            return usersModel.existsUsuario(userId);
+            return usersModel.existsUser(userId);
         } catch (Exception ex) {
-            System.out.println("Error en UsuarioController.existsUsuario: " + ex.getLocalizedMessage());
+            System.out.println("Error in UsersController.existsUser: " + ex.getLocalizedMessage());
             return false;
         }
     }

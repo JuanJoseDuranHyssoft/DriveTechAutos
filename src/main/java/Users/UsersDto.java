@@ -9,53 +9,53 @@ package Users;
  * @author Juan Jose
  */
 public class UsersDto {
-    private int idUsuario;
-    private String nombreUsuario;
-    private String contrasenia;
-    private String rol;
+    private int idUser;
+    private String nameUser;
+    private String password;
+    private String role;
     private String email;
 
     public UsersDto() {
     }
 
-    public UsersDto(int idUsuario, String nombreUsuario, String contrasenia, String rol, String email) {
-        this.idUsuario = idUsuario;
-        this.nombreUsuario = nombreUsuario;
-        this.contrasenia = contrasenia;
-        this.rol = rol;
+    public UsersDto(int idUser, String nameUser, String password, String role, String email) {
+        this.idUser = idUser;
+        this.nameUser = nameUser;
+        this.password = password;
+        this.role = role;
         this.email = email;
     }
 
-    public int getIdUsuario() {
-        return idUsuario;
+    public int getIdUser() {
+        return idUser;
     }
 
-    public void setIdUsuario(int idUsuario) {
-        this.idUsuario = idUsuario;
+    public void setIdUser(int idUser) {
+        this.idUser = idUser;
     }
 
-    public String getNombreUsuario() {
-        return nombreUsuario;
+    public String getNameUser() {
+        return nameUser;
     }
 
-    public void setNombreUsuario(String nombreUsuario) {
-        this.nombreUsuario = nombreUsuario;
+    public void setNameUser(String nameUser) {
+        this.nameUser = nameUser;
     }
 
-    public String getContrasenia() {
-        return contrasenia;
+    public String getPassword() {
+        return password;
     }
 
-    public void setContrasenia(String contrasenia) {
-        this.contrasenia = contrasenia;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getRol() {
-        return rol;
+    public String getRole() {
+        return role;
     }
 
-    public void setRol(String rol) {
-        this.rol = rol;
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getEmail() {

@@ -10,62 +10,62 @@ import java.util.List;
  * @author Juan Jose
  */
 public class CategoriesController {
-    private CategoriesModel categoriaModel;
+    private CategoriesModel categoriesModel;
 
     public CategoriesController() {
-        this.categoriaModel = new CategoriesModel();
+        this.categoriesModel = new CategoriesModel();
     }
 
-    public boolean addCategoria(CategoriesDto dto) {
+    public boolean addCategory(CategoriesDto dto) {
         try {
-            return categoriaModel.addCategory(dto);
+            return categoriesModel.addCategory(dto);
         } catch (Exception ex) {
-            System.out.println("Error en CategoriaController.addCategoria: " + ex.getLocalizedMessage());
+            System.out.println("Error in CategoriesController.addCategory: " + ex.getLocalizedMessage());
             return false;
         }
     }
 
-    public boolean updateCategoria(CategoriesDto dto) {
+    public boolean updateCategory(CategoriesDto dto) {
         try {
-            return categoriaModel.updateCategory(dto);
+            return categoriesModel.updateCategory(dto);
         } catch (Exception ex) {
-            System.out.println("Error en CategoriaController.updateCategoria: " + ex.getLocalizedMessage());
+            System.out.println("Error in CategoriesController.updateCategory: " + ex.getLocalizedMessage());
             return false;
         }
     }
 
-    public boolean deleteCategoria(int id) {
+    public boolean deleteCategory(int id) {
         try {
-            return categoriaModel.deleteCategory(id);
+            return categoriesModel.deleteCategory(id);
         } catch (Exception ex) {
-            System.out.println("Error en CategoriaController.deleteCategoria: " + ex.getLocalizedMessage());
+            System.out.println("Error in CategoriesController.deleteCategory: " + ex.getLocalizedMessage());
             return false;
         }
     }
 
-    public CategoriesDto getCategoria(int id) {
+    public CategoriesDto getCategory(int id) {
         try {
-            return categoriaModel.getCategory(id);
+            return categoriesModel.getCategory(id);
         } catch (Exception ex) {
-            System.out.println("Error en CategoriaController.getCategoria: " + ex.getLocalizedMessage());
+            System.out.println("Error in CategoriesController.getCategory: " + ex.getLocalizedMessage());
             return null;
         }
     }
 
-    public List<CategoriesDto> getAllCategorias() {
+    public List<CategoriesDto> getAllCategories() {
         try {
-            return categoriaModel.getAllCategories();
+            return categoriesModel.getAllCategories();
         } catch (Exception ex) {
-            System.out.println("Error en CategoriaController.getAllCategorias: " + ex.getLocalizedMessage());
+            System.out.println("Error in CategoriesController.getAllCategories: " + ex.getLocalizedMessage());
             return null;
         }
     }
 
-    public boolean existsCategoria(int id) {
+    public boolean existsCategory(int id) {
         try {
-            return categoriaModel.existsCategory(id);
+            return categoriesModel.existsCategory(id);
         } catch (Exception ex) {
-            System.out.println("Error en CategoriaController.existsCategoria: " + ex.getLocalizedMessage());
+            System.out.println("Error in CategoriesController.existsCategory: " + ex.getLocalizedMessage());
             return false;
         }
     }

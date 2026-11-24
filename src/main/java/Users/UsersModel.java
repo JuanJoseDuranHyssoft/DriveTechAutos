@@ -21,18 +21,18 @@ public class UsersModel {
     public UsersModel() {
     }
 
-    public boolean addUsuario(UsersDto userDto) {
+    public boolean addUser(UsersDto userDto) {
         try {
             con = new ConnectionDB();
-            StringBuilder query = new StringBuilder("INSERT INTO Usuario (nombreUsuario, contrasenia, rol, email) VALUES ('");
-            query.append(userDto.getNombreUsuario()).append("', '");
-            query.append(userDto.getContrasenia()).append("', '");
-            query.append(userDto.getRol()).append("', '");
+            StringBuilder query = new StringBuilder("INSERT INTO Users (nameUser, password, role, email) VALUES ('");
+            query.append(userDto.getNameUser()).append("', '");
+            query.append(userDto.getPassword()).append("', '");
+            query.append(userDto.getRole()).append("', '");
             query.append(userDto.getEmail()).append("')");
 
             return con.executeUpdate(query.toString()) > 0;
         } catch (Exception ex) {
-            System.out.println("Error en UsuarioModel.addUsuario: " + ex.getLocalizedMessage());
+            System.out.println("Error in UsersModel.addUser: " + ex.getLocalizedMessage());
             return false;
         } finally {
             if (con != null) {
@@ -41,19 +41,19 @@ public class UsersModel {
         }
     }
 
-    public boolean updateUsuario(UsersDto userDto) {
+    public boolean updateUser(UsersDto userDto) {
         try {
             con = new ConnectionDB();
-            StringBuilder query = new StringBuilder("UPDATE Usuario SET ");
-            query.append("nombreUsuario = '").append(userDto.getNombreUsuario()).append("', ");
-            query.append("contrasenia = '").append(userDto.getContrasenia()).append("', ");
-            query.append("rol = '").append(userDto.getRol()).append("', ");
+            StringBuilder query = new StringBuilder("UPDATE Users SET ");
+            query.append("nameUser = '").append(userDto.getNameUser()).append("', ");
+            query.append("password = '").append(userDto.getPassword()).append("', ");
+            query.append("role = '").append(userDto.getRole()).append("', ");
             query.append("email = '").append(userDto.getEmail()).append("' ");
-            query.append("WHERE idUsuario = ").append(userDto.getIdUsuario());
+            query.append("WHERE idUser = ").append(userDto.getIdUser());
 
             return con.executeUpdate(query.toString()) > 0;
         } catch (Exception ex) {
-            System.out.println("Error en UsuarioModel.updateUsuario: " + ex.getLocalizedMessage());
+            System.out.println("Error in UsersModel.updateUser: " + ex.getLocalizedMessage());
             return false;
         } finally {
             if (con != null) {
@@ -62,15 +62,15 @@ public class UsersModel {
         }
     }
 
-    public boolean deleteUsuario(int userId) {
+    public boolean deleteUser(int userId) {
         try {
             con = new ConnectionDB();
-            StringBuilder query = new StringBuilder("DELETE FROM Usuario WHERE idUsuario = ");
+            StringBuilder query = new StringBuilder("DELETE FROM Users WHERE idUser = ");
             query.append(userId);
 
             return con.executeUpdate(query.toString()) > 0;
         } catch (Exception ex) {
-            System.out.println("Error en UsuarioModel.deleteUsuario: " + ex.getLocalizedMessage());
+            System.out.println("Error in UsersModel.deleteUser: " + ex.getLocalizedMessage());
             return false;
         } finally {
             if (con != null) {
@@ -79,25 +79,25 @@ public class UsersModel {
         }
     }
 
-    public UsersDto getUsuario(int userId) {
+    public UsersDto getUser(int userId) {
         UsersDto userDto = null;
         try {
             con = new ConnectionDB();
-            StringBuilder query = new StringBuilder("SELECT * FROM Usuario WHERE idUsuario = ");
+            StringBuilder query = new StringBuilder("SELECT * FROM Users WHERE idUser = ");
             query.append(userId);
 
             rs = con.find(query.toString());
 
             if (rs != null && rs.next()) {
                 userDto = new UsersDto();
-                userDto.setIdUsuario(rs.getInt("idUsuario"));
-                userDto.setNombreUsuario(rs.getString("nombreUsuario"));
-                userDto.setContrasenia(rs.getString("contrasenia"));
-                userDto.setRol(rs.getString("rol"));
+                userDto.setIdUser(rs.getInt("idUser"));
+                userDto.setNameUser(rs.getString("nameUser"));
+                userDto.setPassword(rs.getString("password"));
+                userDto.setRole(rs.getString("role"));
                 userDto.setEmail(rs.getString("email"));
             }
         } catch (SQLException ex) {
-            System.out.println("Error en UsuarioModel.getUsuario: " + ex.getLocalizedMessage());
+            System.out.println("Error in UsersModel.getUser: " + ex.getLocalizedMessage());
         } finally {
             if (con != null) {
                 con.closeConnection();
@@ -106,24 +106,24 @@ public class UsersModel {
         return userDto;
     }
 
-    public List<UsersDto> getAllUsuarios() {
+    public List<UsersDto> getAllUsers() {
         List<UsersDto> listUsersDto = new ArrayList<>();
         try {
             con = new ConnectionDB();
-            String query = "SELECT * FROM Usuario";
+            String query = "SELECT * FROM Users";
             rs = con.find(query);
 
             while (rs != null && rs.next()) {
                 UsersDto user = new UsersDto();
-                user.setIdUsuario(rs.getInt("idUsuario"));
-                user.setNombreUsuario(rs.getString("nombreUsuario"));
-                user.setContrasenia(rs.getString("contrasenia"));
-                user.setRol(rs.getString("rol"));
+                user.setIdUser(rs.getInt("idUser"));
+                user.setNameUser(rs.getString("nameUser"));
+                user.setPassword(rs.getString("password"));
+                user.setRole(rs.getString("role"));
                 user.setEmail(rs.getString("email"));
                 listUsersDto.add(user);
             }
         } catch (SQLException ex) {
-            System.out.println("Error en UsuarioModel.getAllUsuarios: " + ex.getLocalizedMessage());
+            System.out.println("Error in UsersModel.getAllUsers: " + ex.getLocalizedMessage());
         } finally {
             if (con != null) {
                 con.closeConnection();
@@ -132,25 +132,25 @@ public class UsersModel {
         return listUsersDto;
     }
 
-    public UsersDto login(String email, String contrasenia) {
+    public UsersDto login(String email, String password) {
         UsersDto user = null;
         try {
             con = new ConnectionDB();
-            StringBuilder query = new StringBuilder("SELECT * FROM Usuario WHERE email = '");
-            query.append(email).append("' AND contrasenia = '").append(contrasenia).append("'");
+            StringBuilder query = new StringBuilder("SELECT * FROM Users WHERE email = '");
+            query.append(email).append("' AND password = '").append(password).append("'");
 
             rs = con.find(query.toString());
 
             if (rs != null && rs.next()) {
                 user = new UsersDto();
-                user.setIdUsuario(rs.getInt("idUsuario"));
-                user.setNombreUsuario(rs.getString("nombreUsuario"));
-                user.setContrasenia(rs.getString("contrasenia"));
-                user.setRol(rs.getString("rol"));
+                user.setIdUser(rs.getInt("idUser"));
+                user.setNameUser(rs.getString("nameUser"));
+                user.setPassword(rs.getString("password"));
+                user.setRole(rs.getString("role"));
                 user.setEmail(rs.getString("email"));
             }
         } catch (SQLException ex) {
-            System.out.println("Error en UsuarioModel.login: " + ex.getLocalizedMessage());
+            System.out.println("Error in UsersModel.login: " + ex.getLocalizedMessage());
         } finally {
             if (con != null) {
                 con.closeConnection();
@@ -159,16 +159,16 @@ public class UsersModel {
         return user;
     }
 
-    public boolean existsUsuario(int userId) {
+    public boolean existsUser(int userId) {
         try {
             con = new ConnectionDB();
-            StringBuilder query = new StringBuilder("SELECT 1 FROM Usuario WHERE idUsuario = ");
+            StringBuilder query = new StringBuilder("SELECT 1 FROM Users WHERE idUser = ");
             query.append(userId);
 
             rs = con.find(query.toString());
             return rs != null && rs.next();
         } catch (SQLException ex) {
-            System.out.println("Error en UsuarioModel.existsUsuario: " + ex.getLocalizedMessage());
+            System.out.println("Error in UsersModel.existsUser: " + ex.getLocalizedMessage());
             return false;
         } finally {
             if (con != null) {
@@ -177,25 +177,25 @@ public class UsersModel {
         }
     }
     
-    public UsersDto getUsuarioByEmail(String email) {
+    public UsersDto getUserByEmail(String email) {
         UsersDto user = null;
         try {
             con = new ConnectionDB();
-            StringBuilder query = new StringBuilder("SELECT * FROM Usuario WHERE email = '");
+            StringBuilder query = new StringBuilder("SELECT * FROM Users WHERE email = '");
             query.append(email).append("'");
 
             rs = con.find(query.toString());
 
             if (rs != null && rs.next()) {
                 user = new UsersDto();
-                user.setIdUsuario(rs.getInt("idUsuario"));
-                user.setNombreUsuario(rs.getString("nombreUsuario"));
-                user.setContrasenia(rs.getString("contrasenia"));
-                user.setRol(rs.getString("rol"));
+                user.setIdUser(rs.getInt("idUser"));
+                user.setNameUser(rs.getString("nameUser"));
+                user.setPassword(rs.getString("password"));
+                user.setRole(rs.getString("role"));
                 user.setEmail(rs.getString("email"));
             }
         } catch (SQLException ex) {
-            System.out.println("Error en UsuarioModel.getUsuarioByEmail: " + ex.getLocalizedMessage());
+            System.out.println("Error in UsersModel.getUserByEmail: " + ex.getLocalizedMessage());
         } finally {
             if (con != null) {
                 con.closeConnection();

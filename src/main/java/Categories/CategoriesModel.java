@@ -24,12 +24,12 @@ public class CategoriesModel {
     public boolean addCategory(CategoriesDto dto) {
         try {
             con = new ConnectionDB();
-            StringBuilder query = new StringBuilder("INSERT INTO Categoria (nombreCategoria) VALUES (");
-            query.append("'").append(dto.getNombreCategory()).append("')");
+            StringBuilder query = new StringBuilder("INSERT INTO Categories (nameCategory) VALUES (");
+            query.append("'").append(dto.getNameCategory()).append("')");
 
             return con.executeUpdate(query.toString()) > 0;
         } catch (Exception ex) {
-            System.out.println("Error en CategoriaModel.addCategoria: " + ex.getLocalizedMessage());
+            System.out.println("Error in CategoriesModel.addCategory: " + ex.getLocalizedMessage());
             return false;
         } finally {
             if (con != null) {
@@ -41,13 +41,13 @@ public class CategoriesModel {
     public boolean updateCategory(CategoriesDto dto) {
         try {
             con = new ConnectionDB();
-            StringBuilder query = new StringBuilder("UPDATE Categoria SET ");
-            query.append("nombreCategoria = '").append(dto.getNombreCategory()).append("' ");
-            query.append("WHERE idCategoria = ").append(dto.getIdCategory());
+            StringBuilder query = new StringBuilder("UPDATE Categories SET ");
+            query.append("nameCategory = '").append(dto.getNameCategory()).append("' ");
+            query.append("WHERE idCategory = ").append(dto.getIdCategory());
 
             return con.executeUpdate(query.toString()) > 0;
         } catch (Exception ex) {
-            System.out.println("Error en CategoriaModel.updateCategoria: " + ex.getLocalizedMessage());
+            System.out.println("Error in CategoriesModel.updateCategory: " + ex.getLocalizedMessage());
             return false;
         } finally {
             if (con != null) {
@@ -59,12 +59,12 @@ public class CategoriesModel {
     public boolean deleteCategory(int id) {
         try {
             con = new ConnectionDB();
-            StringBuilder query = new StringBuilder("DELETE FROM Categoria WHERE idCategoria = ");
+            StringBuilder query = new StringBuilder("DELETE FROM Categories WHERE idCategory = ");
             query.append(id);
 
             return con.executeUpdate(query.toString()) > 0;
         } catch (Exception ex) {
-            System.out.println("Error en CategoriaModel.deleteCategoria: " + ex.getLocalizedMessage());
+            System.out.println("Error in CategoriesModel.deleteCategory: " + ex.getLocalizedMessage());
             return false;
         } finally {
             if (con != null) {
@@ -77,18 +77,18 @@ public class CategoriesModel {
         CategoriesDto dto = null;
         try {
             con = new ConnectionDB();
-            StringBuilder query = new StringBuilder("SELECT * FROM Categoria WHERE idCategoria = ");
+            StringBuilder query = new StringBuilder("SELECT * FROM Categories WHERE idCategory = ");
             query.append(id);
 
             rs = con.find(query.toString());
 
             if (rs != null && rs.next()) {
                 dto = new CategoriesDto();
-                dto.setIdCategory(rs.getInt("idCategoria"));
-                dto.setNombreCategory(rs.getString("nombreCategoria"));
+                dto.setIdCategory(rs.getInt("idCategory"));
+                dto.setNameCategory(rs.getString("nameCategory"));
             }
         } catch (SQLException ex) {
-            System.out.println("Error en CategoriaModel.getCategoria: " + ex.getLocalizedMessage());
+            System.out.println("Error in CategoriesModel.getCategory: " + ex.getLocalizedMessage());
         } finally {
             if (con != null) {
                 con.closeConnection();
@@ -101,17 +101,17 @@ public class CategoriesModel {
         List<CategoriesDto> lista = new ArrayList<>();
         try {
             con = new ConnectionDB();
-            String query = "SELECT * FROM Categoria";
+            String query = "SELECT * FROM Categories";
             rs = con.find(query);
 
             while (rs != null && rs.next()) {
                 CategoriesDto dto = new CategoriesDto();
-                dto.setIdCategory(rs.getInt("idCategoria"));
-                dto.setNombreCategory(rs.getString("nombreCategoria"));
+                dto.setIdCategory(rs.getInt("idCategory"));
+                dto.setNameCategory(rs.getString("nameCategory"));
                 lista.add(dto);
             }
         } catch (SQLException ex) {
-            System.out.println("Error en CategoriaModel.getAllCategorias: " + ex.getLocalizedMessage());
+            System.out.println("Error in CategoriesModel.getAllCategories: " + ex.getLocalizedMessage());
         } finally {
             if (con != null) {
                 con.closeConnection();
@@ -123,13 +123,13 @@ public class CategoriesModel {
     public boolean existsCategory(int id) {
         try {
             con = new ConnectionDB();
-            StringBuilder query = new StringBuilder("SELECT 1 FROM Categoria WHERE idCategoria = ");
+            StringBuilder query = new StringBuilder("SELECT 1 FROM Categories WHERE idCategory = ");
             query.append(id);
 
             rs = con.find(query.toString());
             return rs != null && rs.next();
         } catch (SQLException ex) {
-            System.out.println("Error en CategoriaModel.existsCategoria: " + ex.getLocalizedMessage());
+            System.out.println("Error in CategoriesModel.existsCategory: " + ex.getLocalizedMessage());
             return false;
         } finally {
             if (con != null) {

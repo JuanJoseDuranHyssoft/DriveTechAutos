@@ -28,11 +28,11 @@ public class CategoriesDto {
         this.idCategory = idCategory;
     }
 
-    public String getNombreCategory() {
+    public String getNameCategory() {
         return nameCategory;
     }
 
-    public void setNombreCategory(String nameCategory) {
+    public void setNameCategory(String nameCategory) {
         this.nameCategory = nameCategory;
     }
 }

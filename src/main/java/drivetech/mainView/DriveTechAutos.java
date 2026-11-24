@@ -4,7 +4,7 @@
 
 package drivetech.mainView;
 import Users.LoginView;
-import Venta.VentasView;
+import Sales.VentasView;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
 

@@ -61,7 +61,7 @@ public class UsersView {
 
         try {
             UsersDto usuario = usersController.login(email, contrasenia);
-            System.out.println("✅ ¡Login exitoso! Bienvenido, " + usuario.getNombreUsuario() + " (" + usuario.getRol() + ")");
+            System.out.println("✅ ¡Login exitoso! Bienvenido, " + usuario.getNameUser() + " (" + usuario.getRole() + ")");
             
         } catch (Exception e) {
             System.out.println("❌ Error de inicio de sesión: " + e.getMessage()); 
@@ -82,7 +82,7 @@ public class UsersView {
         // El ID no se envía porque SQLite lo genera automáticamente (AUTOINCREMENT)
         UsersDto nuevoUsuario = new UsersDto(0, nombre, contrasenia, rol, email);
 
-        if (usersController.addUsuario(nuevoUsuario)) {
+        if (usersController.addUser(nuevoUsuario)) {
             System.out.println("✅ Usuario agregado exitosamente.");
         } else {
             System.out.println("❌ Error al agregar el usuario.");
@@ -91,12 +91,12 @@ public class UsersView {
 
     private void listarUsuarios() {
         System.out.println("\n--- LISTA DE USUARIOS ---");
-        List<UsersDto> usuarios = usersController.getAllUsuarios();
+        List<UsersDto> usuarios = usersController.getAllUsers();
 
         if (usuarios != null && !usuarios.isEmpty()) {
             for (UsersDto u : usuarios) {
-                System.out.println("ID: " + u.getIdUsuario() + " | Nombre: " + u.getNombreUsuario() + 
-                                   " | Rol: " + u.getRol() + " | Email: " + u.getEmail());
+                System.out.println("ID: " + u.getIdUser() + " | Nombre: " + u.getNameUser() + 
+                                   " | Rol: " + u.getRole() + " | Email: " + u.getEmail());
             }
         } else {
             System.out.println("No hay usuarios registrados en la base de datos.");
@@ -107,10 +107,10 @@ public class UsersView {
         System.out.print("\nIngrese el ID del usuario a buscar: ");
         int id = Integer.parseInt(scanner.nextLine());
 
-        UsersDto u = usersController.getUsuario(id);
+        UsersDto u = usersController.getUser(id);
         if (u != null) {
             System.out.println("✅ Usuario encontrado:");
-            System.out.println("Nombre: " + u.getNombreUsuario() + " | Rol: " + u.getRol() + " | Email: " + u.getEmail());
+            System.out.println("Nombre: " + u.getNameUser() + " | Rol: " + u.getRole() + " | Email: " + u.getEmail());
         } else {
             System.out.println("❌ No se encontró ningún usuario con el ID " + id);
         }
@@ -120,7 +120,7 @@ public class UsersView {
         System.out.print("\nIngrese el ID del usuario a actualizar: ");
         int id = Integer.parseInt(scanner.nextLine());
 
-        if (usersController.existsUsuario(id)) {
+        if (usersController.existsUser(id)) {
             System.out.print("Nuevo nombre de usuario: ");
             String nombre = scanner.nextLine();
             System.out.print("Nueva contraseña: ");
@@ -132,7 +132,7 @@ public class UsersView {
 
             UsersDto usuarioActualizado = new UsersDto(id, nombre, contrasenia, rol, email);
 
-            if (usersController.updateUsuario(usuarioActualizado)) {
+            if (usersController.updateUser(usuarioActualizado)) {
                 System.out.println("✅ Usuario actualizado exitosamente.");
             } else {
                 System.out.println("❌ Error al actualizar el usuario.");
@@ -146,7 +146,7 @@ public class UsersView {
         System.out.print("\nIngrese el ID del usuario a eliminar: ");
         int id = Integer.parseInt(scanner.nextLine());
 
-        if (usersController.deleteUsuario(id)) {
+        if (usersController.deleteUser(id)) {
             System.out.println("✅ Usuario eliminado exitosamente.");
         } else {
             System.out.println("❌ Error al eliminar el usuario (o el usuario no existe).");
