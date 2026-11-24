@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
@@ -166,6 +167,109 @@ public class VentasView extends javax.swing.JInternalFrame {
         inputOdialogPaymentMethods.setText(paymentMethodLabel(paymentMethodsById.get(selectedPaymentMethodId)));
     }
 
+    private void clearForm() {
+        inputSaleDate.setText("");
+        inputPrice.setText("");
+        inputOdialogVehicle.setText("");
+        inputOdialogClient.setText("");
+        inputOdialogEmploye.setText("");
+        inputOdialogPaymentMethods.setText("");
+
+        selectedSaleId = 0;
+        selectedVehicleId = 0;
+        selectedCustomerId = 0;
+        selectedEmployeeId = 0;
+        selectedPaymentMethodId = 0;
+
+        salesTable.clearSelection();
+    }
+
+    private void createSale() {
+        double price;
+        try {
+            price = Double.parseDouble(inputPrice.getText().trim());
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "El precio final debe ser un número.");
+            return;
+        }
+        if (inputSaleDate.getText().trim().isEmpty() || selectedVehicleId == 0
+                || selectedCustomerId == 0 || selectedEmployeeId == 0 || selectedPaymentMethodId == 0) {
+            JOptionPane.showMessageDialog(this, "Complete todos los campos.");
+            return;
+        }
+
+        SalesDto dto = new SalesDto();
+        dto.setSaleDate(inputSaleDate.getText().trim());
+        dto.setFinalPrice(price);
+        dto.setIdVehicle(selectedVehicleId);
+        dto.setIdCustomer(selectedCustomerId);
+        dto.setIdEmployee(selectedEmployeeId);
+        dto.setIdPaymentMethod(selectedPaymentMethodId);
+
+        if (salesController.addSale(dto)) {
+            loadSales();
+            clearForm();
+            JOptionPane.showMessageDialog(this, "Venta creada correctamente.");
+        } else {
+            JOptionPane.showMessageDialog(this, "No se pudo crear la venta.");
+        }
+    }
+
+    private void updateSelectedSale() {
+        if (selectedSaleId == 0) {
+            JOptionPane.showMessageDialog(this, "Seleccione una venta de la tabla para editar.");
+            return;
+        }
+        double price;
+        try {
+            price = Double.parseDouble(inputPrice.getText().trim());
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "El precio final debe ser un número.");
+            return;
+        }
+        if (inputSaleDate.getText().trim().isEmpty() || selectedVehicleId == 0
+                || selectedCustomerId == 0 || selectedEmployeeId == 0 || selectedPaymentMethodId == 0) {
+            JOptionPane.showMessageDialog(this, "Complete todos los campos.");
+            return;
+        }
+
+        SalesDto dto = new SalesDto();
+        dto.setIdSale(selectedSaleId);
+        dto.setSaleDate(inputSaleDate.getText().trim());
+        dto.setFinalPrice(price);
+        dto.setIdVehicle(selectedVehicleId);
+        dto.setIdCustomer(selectedCustomerId);
+        dto.setIdEmployee(selectedEmployeeId);
+        dto.setIdPaymentMethod(selectedPaymentMethodId);
+
+        if (salesController.updateSale(dto)) {
+            loadSales();
+            clearForm();
+            JOptionPane.showMessageDialog(this, "Venta actualizada correctamente.");
+        } else {
+            JOptionPane.showMessageDialog(this, "No se pudo actualizar la venta.");
+        }
+    }
+
+    private void deleteSelectedSale() {
+        if (selectedSaleId == 0) {
+            JOptionPane.showMessageDialog(this, "Seleccione una fila de la tabla para borrar");
+            return;
+        }
+        int option = JOptionPane.showConfirmDialog(this,
+                "¿Seguro que desea borrar la venta seleccionada?", "Confirmar", JOptionPane.YES_NO_OPTION);
+        if (option != JOptionPane.YES_OPTION) {
+            return;
+        }
+        if (salesController.deleteSale(selectedSaleId)) {
+            loadSales();
+            clearForm();
+            JOptionPane.showMessageDialog(this, "Venta borrada correctamente.");
+        } else {
+            JOptionPane.showMessageDialog(this, "No se pudo borrar la venta.");
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -180,8 +284,6 @@ public class VentasView extends javax.swing.JInternalFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
-        inputIdSale = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         inputSaleDate = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
@@ -242,11 +344,6 @@ public class VentasView extends javax.swing.JInternalFrame {
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        jLabel3.setFont(new java.awt.Font("Segoe UI Variable", 0, 18)); // NOI18N
-        jLabel3.setText("ID Venta");
-
-        inputIdSale.setEditable(false);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI Variable", 0, 18)); // NOI18N
         jLabel4.setText("Fecha Venta");
@@ -312,17 +409,21 @@ public class VentasView extends javax.swing.JInternalFrame {
                 inputOdialogEmployeMouseClicked(evt);
             }
         });
+        inputOdialogEmploye.addActionListener(this::inputOdialogEmployeActionPerformed);
 
         btnCreate.setBackground(new java.awt.Color(255, 102, 0));
         btnCreate.setFont(new java.awt.Font("Segoe UI Variable", 0, 14)); // NOI18N
         btnCreate.setForeground(new java.awt.Color(255, 255, 255));
         btnCreate.setText("Crear");
+        btnCreate.addActionListener(this::btnCreateActionPerformed);
 
         btnClean.setFont(new java.awt.Font("Segoe UI Variable", 0, 14)); // NOI18N
         btnClean.setText("Limpiar");
+        btnClean.addActionListener(this::btnCleanActionPerformed);
 
         btnDelete.setFont(new java.awt.Font("Segoe UI Variable", 0, 14)); // NOI18N
         btnDelete.setText("Borrar");
+        btnDelete.addActionListener(this::btnDeleteActionPerformed);
 
         btEdit.setFont(new java.awt.Font("Segoe UI Variable", 0, 14)); // NOI18N
         btEdit.setText("Editar");
@@ -339,19 +440,22 @@ public class VentasView extends javax.swing.JInternalFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 960, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(62, 62, 62)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(inputIdSale, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(inputSaleDate, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addComponent(inputPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(inputSaleDate, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                        .addGap(12, 12, 12)
+                                        .addComponent(inputPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(inputOdialogEmploye, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -367,59 +471,55 @@ public class VentasView extends javax.swing.JInternalFrame {
                                 .addGap(12, 12, 12)
                                 .addComponent(inputOdialogPaymentMethods, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(inputOdialogEmploye))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnCreate, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btnClean, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnCreate, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnClean, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(23, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(inputIdSale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
-                            .addComponent(inputSaleDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel5)
-                            .addComponent(inputPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(inputOdialogVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel9)
-                            .addComponent(inputOdialogEmploye, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGap(20, 20, 20)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel6)
+                                    .addComponent(inputOdialogVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel7)
-                                    .addComponent(inputOdialogClient, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btnCreate)
-                                    .addComponent(btEdit))
+                                    .addComponent(inputOdialogClient, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel8)
                                     .addComponent(inputOdialogPaymentMethods, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btnClean)))
+                                    .addComponent(inputOdialogEmploye, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel9)))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel4)
+                                    .addComponent(inputSaleDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel5)
+                                    .addComponent(inputPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(btnCreate)
+                                    .addComponent(btEdit))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnClean))
                             .addComponent(btnDelete))))
-                .addGap(24, 24, 24)
+                .addGap(26, 26, 26)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -526,8 +626,24 @@ public class VentasView extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_salesTableMouseClicked
 
     private void btEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditActionPerformed
-        // TODO add your handling code here:
+        updateSelectedSale();
     }//GEN-LAST:event_btEditActionPerformed
+
+    private void btnCleanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCleanActionPerformed
+        clearForm();
+    }//GEN-LAST:event_btnCleanActionPerformed
+
+    private void inputOdialogEmployeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputOdialogEmployeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inputOdialogEmployeActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        deleteSelectedSale();
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
+        createSale();
+    }//GEN-LAST:event_btnCreateActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -535,7 +651,6 @@ public class VentasView extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnClean;
     private javax.swing.JButton btnCreate;
     private javax.swing.JButton btnDelete;
-    private javax.swing.JTextField inputIdSale;
     private javax.swing.JTextField inputOdialogClient;
     private javax.swing.JTextField inputOdialogEmploye;
     private javax.swing.JTextField inputOdialogPaymentMethods;
@@ -544,7 +659,6 @@ public class VentasView extends javax.swing.JInternalFrame {
     private javax.swing.JTextField inputSaleDate;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;

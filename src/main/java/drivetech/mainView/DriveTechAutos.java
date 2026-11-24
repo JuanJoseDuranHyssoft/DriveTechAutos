@@ -4,7 +4,6 @@
 
 package drivetech.mainView;
 import Users.LoginView;
-import Sales.VentasView;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
 
@@ -17,7 +16,6 @@ public class DriveTechAutos {
     public static void main(String[] args) {
         DriveTechAutosMain mainView = new DriveTechAutosMain();
         LoginView loginView = new LoginView();
-        VentasView ventasView = new VentasView();
         
         mainView.setSize(1024, 720);
         mainView.setLocationRelativeTo(null);
@@ -27,15 +25,10 @@ public class DriveTechAutos {
         loginView.setBorder(null);
         loginView.setSize(mainView.getSize());
         
-        ((BasicInternalFrameUI) ventasView.getUI()).setNorthPane(null);
-        ventasView.setBorder(null);
-        ventasView.setSize(mainView.getSize());
 
         mainView.add(loginView);
-        mainView.add(ventasView);
         mainView.setVisible(true);
         loginView.setVisible(false);
-        ventasView.setVisible(true);
 
     }
 }

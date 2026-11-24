@@ -4,6 +4,9 @@
  */
 package drivetech.mainView;
 
+import Sales.VentasView;
+import javax.swing.plaf.basic.BasicInternalFrameUI;
+
 /**
  *
  * @author aula6
@@ -17,6 +20,22 @@ public class DriveTechAutosMain extends javax.swing.JFrame {
         initComponents();
     }
 
+    private VentasView ventasView;
+
+    private void showView(javax.swing.JInternalFrame view) {
+        if (view.getParent() != getLayeredPane()) {
+            ((BasicInternalFrameUI) view.getUI()).setNorthPane(null);
+            view.setBorder(null);
+            getLayeredPane().add(view, javax.swing.JLayeredPane.PALETTE_LAYER);
+        }
+        view.setBounds(getContentPane().getBounds());
+        view.setVisible(true);
+        try {
+            view.setSelected(true);
+        } catch (java.beans.PropertyVetoException ex) {
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -26,22 +45,142 @@ public class DriveTechAutosMain extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel2 = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        mainMenuBar = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        menuBtnInHome = new javax.swing.JCheckBoxMenuItem();
+        menuBtnInSales = new javax.swing.JMenuItem();
+        menuBtnInCustomers = new javax.swing.JMenuItem();
+        memuBtnInVehicles = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        menuBtnConfiguration = new javax.swing.JMenu();
+        menuBtnCtnClose = new javax.swing.JMenuItem();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(808, 710));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 706, Short.MAX_VALUE)
+        );
+
+        jPanel1.setBackground(new java.awt.Color(0, 0, 0));
+
+        jLabel1.setIcon(new javax.swing.JLabel() {
+            public javax.swing.Icon getIcon() {
+                try {
+                    return new javax.swing.ImageIcon(
+                        new java.net.URL("https://i.ibb.co/dsyymgTk/logo-Autosjpg.jpg")
+                    );
+                } catch (java.net.MalformedURLException e) {
+                }
+                return null;
+            }
+        }.getIcon());
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(293, 293, 293)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(335, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(153, 153, 153))
+        );
+
+        jMenu1.setText("Inicio");
+
+        menuBtnInHome.setText("Home");
+        menuBtnInHome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuBtnInHomeActionPerformed(evt);
+            }
+        });
+        jMenu1.add(menuBtnInHome);
+
+        menuBtnInSales.setText("Ventas");
+        menuBtnInSales.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuBtnInSalesActionPerformed(evt);
+            }
+        });
+        jMenu1.add(menuBtnInSales);
+
+        menuBtnInCustomers.setText("Clientes");
+        jMenu1.add(menuBtnInCustomers);
+
+        memuBtnInVehicles.setText("Vehiculos");
+        jMenu1.add(memuBtnInVehicles);
+        jMenu1.add(jSeparator1);
+
+        mainMenuBar.add(jMenu1);
+
+        menuBtnConfiguration.setText("Configuracion");
+
+        menuBtnCtnClose.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        menuBtnCtnClose.setText("Salir");
+        menuBtnCtnClose.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuBtnCtnCloseActionPerformed(evt);
+            }
+        });
+        menuBtnConfiguration.add(menuBtnCtnClose);
+
+        mainMenuBar.add(menuBtnConfiguration);
+
+        setJMenuBar(mainMenuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 783, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 550, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void menuBtnInSalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuBtnInSalesActionPerformed
+        if (ventasView == null) {
+            ventasView = new VentasView();
+        } else {
+            ventasView.loadSales();
+        }
+        showView(ventasView);
+    }//GEN-LAST:event_menuBtnInSalesActionPerformed
+
+    private void menuBtnCtnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuBtnCtnCloseActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_menuBtnCtnCloseActionPerformed
+
+    private void menuBtnInHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuBtnInHomeActionPerformed
+        if (ventasView != null) {
+            ventasView.setVisible(false);
+        }
+    }//GEN-LAST:event_menuBtnInHomeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -79,5 +218,17 @@ public class DriveTechAutosMain extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JMenuBar mainMenuBar;
+    private javax.swing.JMenuItem memuBtnInVehicles;
+    private javax.swing.JMenu menuBtnConfiguration;
+    private javax.swing.JMenuItem menuBtnCtnClose;
+    private javax.swing.JMenuItem menuBtnInCustomers;
+    private javax.swing.JCheckBoxMenuItem menuBtnInHome;
+    private javax.swing.JMenuItem menuBtnInSales;
     // End of variables declaration//GEN-END:variables
 }
