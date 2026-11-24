@@ -4,6 +4,7 @@
  */
 package PaymentMethods;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
@@ -15,9 +16,11 @@ public class OdialogPaymentMethods extends javax.swing.JDialog {
     
     private final PaymentMethodsController paymentMethodsController = new PaymentMethodsController();
     private DefaultTableModel tableModel;
+    private List<PaymentMethodsDto> paymentMethods = new ArrayList<>();
+    private PaymentMethodsDto selectedPaymentMethod = null;
     
     /**
-     * Creates new form OdialogVehiculo
+     * Creates new form OdialogPaymentMethods
      */
     public OdialogPaymentMethods(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -34,21 +37,36 @@ public class OdialogPaymentMethods extends javax.swing.JDialog {
                 return false;
             }
         };
-        vehiculosTable.setModel(tableModel);
+        patmentMethodsTable.setModel(tableModel);
+        patmentMethodsTable.removeColumn(patmentMethodsTable.getColumnModel().getColumn(0));
     }
 
     public void loadPaymentMethods() {
         tableModel.setRowCount(0);
-        List<PaymentMethodsDto> paymentMethods = paymentMethodsController.getAllPaymentMethods();
-
-        if (paymentMethods != null) {
-            for (PaymentMethodsDto p : paymentMethods) {
-                tableModel.addRow(new Object[]{
-                    p.getIdPaymentMethod(),
-                    p.getDescription()
-                });
-            }
+        paymentMethods = paymentMethodsController.getAllPaymentMethods();
+        if (paymentMethods == null) {
+            paymentMethods = new ArrayList<>();
         }
+
+        for (PaymentMethodsDto p : paymentMethods) {
+            tableModel.addRow(new Object[]{
+                p.getIdPaymentMethod(),
+                p.getDescription()
+            });
+        }
+    }
+
+    private void selectCurrentRow() {
+        int viewRow = patmentMethodsTable.getSelectedRow();
+        if (viewRow < 0) {
+            return;
+        }
+        selectedPaymentMethod = paymentMethods.get(patmentMethodsTable.convertRowIndexToModel(viewRow));
+        dispose();
+    }
+
+    public PaymentMethodsDto getSelectedPaymentMethod() {
+        return selectedPaymentMethod;
     }
 
     /**
@@ -61,11 +79,11 @@ public class OdialogPaymentMethods extends javax.swing.JDialog {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        vehiculosTable = new javax.swing.JTable();
+        patmentMethodsTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        vehiculosTable.setModel(new javax.swing.table.DefaultTableModel(
+        patmentMethodsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -76,7 +94,12 @@ public class OdialogPaymentMethods extends javax.swing.JDialog {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(vehiculosTable);
+        patmentMethodsTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                patmentMethodsTableMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(patmentMethodsTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -91,6 +114,10 @@ public class OdialogPaymentMethods extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void patmentMethodsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_patmentMethodsTableMouseClicked
+        selectCurrentRow();
+    }//GEN-LAST:event_patmentMethodsTableMouseClicked
 
     /**
      * @param args the command line arguments
@@ -137,6 +164,6 @@ public class OdialogPaymentMethods extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable vehiculosTable;
+    private javax.swing.JTable patmentMethodsTable;
     // End of variables declaration//GEN-END:variables
 }

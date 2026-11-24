@@ -4,14 +4,25 @@
  */
 package Sales;
 
-import java.util.List;
-import javax.swing.table.DefaultTableModel;
-import Vehicles.OdialogVehicles;
-import PaymentMethods.OdialogPaymentMethods;
+import Customers.CustomersController;
+import Customers.CustomersDto;
 import Customers.OdialogCustomers;
+import Employees.EmployeesController;
+import Employees.EmployeesDto;
 import Employees.OdialogEmployees;
+import PaymentMethods.OdialogPaymentMethods;
+import PaymentMethods.PaymentMethodsController;
+import PaymentMethods.PaymentMethodsDto;
+import Vehicles.OdialogVehicles;
+import Vehicles.VehiclesController;
+import Vehicles.VehiclesDto;
 import drivetech.mainView.DriveTechAutosMain;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -20,11 +31,28 @@ import javax.swing.SwingUtilities;
 public class VentasView extends javax.swing.JInternalFrame {
 
     private final SalesController salesController = new SalesController();
+    private final VehiclesController vehiclesController = new VehiclesController();
+    private final CustomersController customersController = new CustomersController();
+    private final EmployeesController employeesController = new EmployeesController();
+    private final PaymentMethodsController paymentMethodsController = new PaymentMethodsController();
     private OdialogVehicles odialogVehicle;
     private OdialogPaymentMethods odialogPaymentMethods;
     private OdialogCustomers odialogCustomers;
     private OdialogEmployees odialogEmployees;
     private DefaultTableModel tableModel;
+
+    private final Map<Integer, VehiclesDto> vehiclesById = new HashMap<>();
+    private final Map<Integer, CustomersDto> customersById = new HashMap<>();
+    private final Map<Integer, EmployeesDto> employeesById = new HashMap<>();
+    private final Map<Integer, PaymentMethodsDto> paymentMethodsById = new HashMap<>();
+
+    private List<SalesDto> sales = new ArrayList<>();
+
+    private int selectedSaleId = 0;
+    private int selectedVehicleId = 0;
+    private int selectedCustomerId = 0;
+    private int selectedEmployeeId = 0;
+    private int selectedPaymentMethodId = 0;
 
     /**
      * Creates new form VentasView
@@ -43,26 +71,99 @@ public class VentasView extends javax.swing.JInternalFrame {
                 return false;
             }
         };
-        ventasTable.setModel(tableModel);
+        salesTable.setModel(tableModel);
+        salesTable.removeColumn(salesTable.getColumnModel().getColumn(0));
     }
 
     public void loadSales() {
+        loadLookups();
         tableModel.setRowCount(0);
-        List<SalesDto> ventas = salesController.getAllSales();
 
-        if (ventas != null) {
-            for (SalesDto v : ventas) {
-                tableModel.addRow(new Object[]{
-                    v.getIdSale(),
-                    v.getSaleDate(),
-                    v.getFinalPrice(),
-                    v.getIdVehicle(),
-                    v.getIdCustomer(),
-                    v.getIdEmployee(),
-                    v.getIdPaymentMethod()
-                });
+        sales = salesController.getAllSales();
+        if (sales == null) {
+            sales = new ArrayList<>();
+        }
+
+        for (SalesDto s : sales) {
+            tableModel.addRow(new Object[]{
+                s.getIdSale(),
+                s.getSaleDate(),
+                s.getFinalPrice(),
+                vehicleLabel(vehiclesById.get(s.getIdVehicle())),
+                customerLabel(customersById.get(s.getIdCustomer())),
+                employeeLabel(employeesById.get(s.getIdEmployee())),
+                paymentMethodLabel(paymentMethodsById.get(s.getIdPaymentMethod()))
+            });
+        }
+    }
+
+    private void loadLookups() {
+        vehiclesById.clear();
+        customersById.clear();
+        employeesById.clear();
+        paymentMethodsById.clear();
+
+        List<VehiclesDto> vehicles = vehiclesController.getAllVehicles();
+        if (vehicles != null) {
+            for (VehiclesDto v : vehicles) {
+                vehiclesById.put(v.getIdVehicle(), v);
             }
         }
+        List<CustomersDto> customers = customersController.getAllCustomers();
+        if (customers != null) {
+            for (CustomersDto c : customers) {
+                customersById.put(c.getIdCustomer(), c);
+            }
+        }
+        List<EmployeesDto> employees = employeesController.getAllEmployees();
+        if (employees != null) {
+            for (EmployeesDto e : employees) {
+                employeesById.put(e.getIdEmployee(), e);
+            }
+        }
+        List<PaymentMethodsDto> paymentMethods = paymentMethodsController.getAllPaymentMethods();
+        if (paymentMethods != null) {
+            for (PaymentMethodsDto p : paymentMethods) {
+                paymentMethodsById.put(p.getIdPaymentMethod(), p);
+            }
+        }
+    }
+
+    private String vehicleLabel(VehiclesDto v) {
+        return v == null ? "" : v.getBrand() + " " + v.getModel();
+    }
+
+    private String customerLabel(CustomersDto c) {
+        return c == null ? "" : c.getName() + " " + c.getLastName();
+    }
+
+    private String employeeLabel(EmployeesDto e) {
+        return e == null ? "" : e.getName() + " " + e.getLastName();
+    }
+
+    private String paymentMethodLabel(PaymentMethodsDto p) {
+        return p == null ? "" : p.getDescription();
+    }
+
+    private void fillInputsFromSelectedRow() {
+        int viewRow = salesTable.getSelectedRow();
+        if (viewRow < 0) {
+            return;
+        }
+        SalesDto s = sales.get(salesTable.convertRowIndexToModel(viewRow));
+
+        selectedSaleId = s.getIdSale();
+        selectedVehicleId = s.getIdVehicle();
+        selectedCustomerId = s.getIdCustomer();
+        selectedEmployeeId = s.getIdEmployee();
+        selectedPaymentMethodId = s.getIdPaymentMethod();
+
+        inputSaleDate.setText(s.getSaleDate());
+        inputPrice.setText(java.math.BigDecimal.valueOf(s.getFinalPrice()).toPlainString());
+        inputOdialogVehicle.setText(vehicleLabel(vehiclesById.get(selectedVehicleId)));
+        inputOdialogClient.setText(customerLabel(customersById.get(selectedCustomerId)));
+        inputOdialogEmploye.setText(employeeLabel(employeesById.get(selectedEmployeeId)));
+        inputOdialogPaymentMethods.setText(paymentMethodLabel(paymentMethodsById.get(selectedPaymentMethodId)));
     }
 
     /**
@@ -86,7 +187,7 @@ public class VentasView extends javax.swing.JInternalFrame {
         jLabel5 = new javax.swing.JLabel();
         inputPrice = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        ventasTable = new javax.swing.JTable();
+        salesTable = new javax.swing.JTable();
         jLabel6 = new javax.swing.JLabel();
         inputOdialogVehicle = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
@@ -95,10 +196,10 @@ public class VentasView extends javax.swing.JInternalFrame {
         inputOdialogPaymentMethods = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         inputOdialogEmploye = new javax.swing.JTextField();
-        btnCrear = new javax.swing.JButton();
-        btnEditar = new javax.swing.JButton();
-        btnBuscar = new javax.swing.JButton();
-        btnLimpiar = new javax.swing.JButton();
+        btnCreate = new javax.swing.JButton();
+        btnClean = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
+        btEdit = new javax.swing.JButton();
 
         jPanel1.setBackground(new java.awt.Color(0, 0, 0));
 
@@ -153,7 +254,7 @@ public class VentasView extends javax.swing.JInternalFrame {
         jLabel5.setFont(new java.awt.Font("Segoe UI Variable", 0, 18)); // NOI18N
         jLabel5.setText("Precio Final");
 
-        ventasTable.setModel(new javax.swing.table.DefaultTableModel(
+        salesTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -164,7 +265,12 @@ public class VentasView extends javax.swing.JInternalFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(ventasTable);
+        salesTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                salesTableMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(salesTable);
 
         jLabel6.setFont(new java.awt.Font("Segoe UI Variable", 0, 18)); // NOI18N
         jLabel6.setText("Vehiculo");
@@ -207,20 +313,21 @@ public class VentasView extends javax.swing.JInternalFrame {
             }
         });
 
-        btnCrear.setBackground(new java.awt.Color(255, 102, 0));
-        btnCrear.setFont(new java.awt.Font("Segoe UI Variable", 0, 14)); // NOI18N
-        btnCrear.setForeground(new java.awt.Color(255, 255, 255));
-        btnCrear.setText("Crear");
+        btnCreate.setBackground(new java.awt.Color(255, 102, 0));
+        btnCreate.setFont(new java.awt.Font("Segoe UI Variable", 0, 14)); // NOI18N
+        btnCreate.setForeground(new java.awt.Color(255, 255, 255));
+        btnCreate.setText("Crear");
 
-        btnEditar.setFont(new java.awt.Font("Segoe UI Variable", 0, 14)); // NOI18N
-        btnEditar.setText("Limpiar");
+        btnClean.setFont(new java.awt.Font("Segoe UI Variable", 0, 14)); // NOI18N
+        btnClean.setText("Limpiar");
 
-        btnBuscar.setFont(new java.awt.Font("Segoe UI Variable", 0, 14)); // NOI18N
-        btnBuscar.setText("Borrar");
+        btnDelete.setFont(new java.awt.Font("Segoe UI Variable", 0, 14)); // NOI18N
+        btnDelete.setText("Borrar");
 
-        btnLimpiar.setFont(new java.awt.Font("Segoe UI Variable", 0, 14)); // NOI18N
-        btnLimpiar.setText("Buscar");
-        btnLimpiar.setToolTipText("");
+        btEdit.setFont(new java.awt.Font("Segoe UI Variable", 0, 14)); // NOI18N
+        btEdit.setText("Editar");
+        btEdit.setToolTipText("");
+        btEdit.addActionListener(this::btEditActionPerformed);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -267,12 +374,12 @@ public class VentasView extends javax.swing.JInternalFrame {
                                 .addComponent(inputOdialogEmploye))
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(btnCreate, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnClean, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                    .addComponent(btEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addContainerGap(23, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -304,14 +411,14 @@ public class VentasView extends javax.swing.JInternalFrame {
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel7)
                                     .addComponent(inputOdialogClient, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btnCrear)
-                                    .addComponent(btnLimpiar))
+                                    .addComponent(btnCreate)
+                                    .addComponent(btEdit))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel8)
                                     .addComponent(inputOdialogPaymentMethods, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btnEditar)))
-                            .addComponent(btnBuscar))))
+                                    .addComponent(btnClean)))
+                            .addComponent(btnDelete))))
                 .addGap(24, 24, 24)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -356,6 +463,13 @@ public class VentasView extends javax.swing.JInternalFrame {
         odialogVehicle = new OdialogVehicles(window, true);
         odialogVehicle.setLocationRelativeTo(window);
         odialogVehicle.setVisible(true);
+
+        VehiclesDto selected = odialogVehicle.getSelectedVehicle();
+        if (selected != null) {
+            selectedVehicleId = selected.getIdVehicle();
+            vehiclesById.put(selectedVehicleId, selected);
+            inputOdialogVehicle.setText(vehicleLabel(selected));
+        }
     }//GEN-LAST:event_inputOdialogVehicleMouseClicked
 
     private void inputOdialogPaymentMethodsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputOdialogPaymentMethodsActionPerformed
@@ -368,6 +482,13 @@ public class VentasView extends javax.swing.JInternalFrame {
         odialogPaymentMethods = new OdialogPaymentMethods(window, true);
         odialogPaymentMethods.setLocationRelativeTo(window);
         odialogPaymentMethods.setVisible(true);
+
+        PaymentMethodsDto selected = odialogPaymentMethods.getSelectedPaymentMethod();
+        if (selected != null) {
+            selectedPaymentMethodId = selected.getIdPaymentMethod();
+            paymentMethodsById.put(selectedPaymentMethodId, selected);
+            inputOdialogPaymentMethods.setText(paymentMethodLabel(selected));
+        }
     }//GEN-LAST:event_inputOdialogPaymentMethodsMouseClicked
 
     private void inputOdialogClientMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inputOdialogClientMouseClicked
@@ -376,6 +497,13 @@ public class VentasView extends javax.swing.JInternalFrame {
         odialogCustomers = new OdialogCustomers(window, true);
         odialogCustomers.setLocationRelativeTo(window);
         odialogCustomers.setVisible(true);
+
+        CustomersDto selected = odialogCustomers.getSelectedCustomer();
+        if (selected != null) {
+            selectedCustomerId = selected.getIdCustomer();
+            customersById.put(selectedCustomerId, selected);
+            inputOdialogClient.setText(customerLabel(selected));
+        }
     }//GEN-LAST:event_inputOdialogClientMouseClicked
 
     private void inputOdialogEmployeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inputOdialogEmployeMouseClicked
@@ -384,14 +512,29 @@ public class VentasView extends javax.swing.JInternalFrame {
         odialogEmployees = new OdialogEmployees(window, true);
         odialogEmployees.setLocationRelativeTo(window);
         odialogEmployees.setVisible(true);
+
+        EmployeesDto selected = odialogEmployees.getSelectedEmployee();
+        if (selected != null) {
+            selectedEmployeeId = selected.getIdEmployee();
+            employeesById.put(selectedEmployeeId, selected);
+            inputOdialogEmploye.setText(employeeLabel(selected));
+        }
     }//GEN-LAST:event_inputOdialogEmployeMouseClicked
+
+    private void salesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_salesTableMouseClicked
+        fillInputsFromSelectedRow();
+    }//GEN-LAST:event_salesTableMouseClicked
+
+    private void btEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btEditActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnBuscar;
-    private javax.swing.JButton btnCrear;
-    private javax.swing.JButton btnEditar;
-    private javax.swing.JButton btnLimpiar;
+    private javax.swing.JButton btEdit;
+    private javax.swing.JButton btnClean;
+    private javax.swing.JButton btnCreate;
+    private javax.swing.JButton btnDelete;
     private javax.swing.JTextField inputIdSale;
     private javax.swing.JTextField inputOdialogClient;
     private javax.swing.JTextField inputOdialogEmploye;
@@ -412,6 +555,6 @@ public class VentasView extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable ventasTable;
+    private javax.swing.JTable salesTable;
     // End of variables declaration//GEN-END:variables
 }

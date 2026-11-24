@@ -4,6 +4,7 @@
  */
 package Employees;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
@@ -15,9 +16,11 @@ public class OdialogEmployees extends javax.swing.JDialog {
     
     private final EmployeesController employeesController = new EmployeesController();
     private DefaultTableModel tableModel;
+    private List<EmployeesDto> employees = new ArrayList<>();
+    private EmployeesDto selectedEmployee = null;
     
     /**
-     * Creates new form OdialogVehiculo
+     * Creates new form OdialogEmployees
      */
     public OdialogEmployees(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -28,30 +31,48 @@ public class OdialogEmployees extends javax.swing.JDialog {
     
     private void configureTable() {
         tableModel = new DefaultTableModel(
-                new String[]{"ID Empleado", "Nombre", "Apellido", "Telefono", "Puesto"}, 0) {
+                new String[]{"ID Empleado", "Nombre", "Apellido", "Puesto", "Telefono"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
-        vehiculosTable.setModel(tableModel);
+        employeesTable.setModel(tableModel);
+        // The ID stays in the model but is hidden from the user
+        employeesTable.removeColumn(employeesTable.getColumnModel().getColumn(0));
     }
 
     public void loadEmployees() {
         tableModel.setRowCount(0);
-        List<EmployeesDto> employees = employeesController.getAllEmployees();
-
-        if (employees != null) {
-            for (EmployeesDto e : employees) {
-                tableModel.addRow(new Object[]{
-                    e.getIdEmployee(),
-                    e.getName(),
-                    e.getLastName(),
-                    e.getPosition(),
-                    e.getPhone()
-                });
-            }
+        employees = employeesController.getAllEmployees();
+        if (employees == null) {
+            employees = new ArrayList<>();
         }
+
+        for (EmployeesDto e : employees) {
+            tableModel.addRow(new Object[]{
+                e.getIdEmployee(),
+                e.getName(),
+                e.getLastName(),
+                e.getPosition(),
+                e.getPhone()
+            });
+        }
+    }
+
+    // Takes the clicked row, keeps its record and closes the dialog
+    private void selectCurrentRow() {
+        int viewRow = employeesTable.getSelectedRow();
+        if (viewRow < 0) {
+            return;
+        }
+        selectedEmployee = employees.get(employeesTable.convertRowIndexToModel(viewRow));
+        dispose();
+    }
+
+    // Returns the record chosen by the user, or null if the dialog was closed without choosing
+    public EmployeesDto getSelectedEmployee() {
+        return selectedEmployee;
     }
 
     /**
@@ -64,11 +85,11 @@ public class OdialogEmployees extends javax.swing.JDialog {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        vehiculosTable = new javax.swing.JTable();
+        employeesTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        vehiculosTable.setModel(new javax.swing.table.DefaultTableModel(
+        employeesTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -79,7 +100,12 @@ public class OdialogEmployees extends javax.swing.JDialog {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(vehiculosTable);
+        employeesTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                employeesTableMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(employeesTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -94,6 +120,10 @@ public class OdialogEmployees extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void employeesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_employeesTableMouseClicked
+        selectCurrentRow();
+    }//GEN-LAST:event_employeesTableMouseClicked
 
     /**
      * @param args the command line arguments
@@ -145,7 +175,7 @@ public class OdialogEmployees extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable employeesTable;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable vehiculosTable;
     // End of variables declaration//GEN-END:variables
 }

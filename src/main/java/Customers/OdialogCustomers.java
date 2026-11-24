@@ -4,6 +4,7 @@
  */
 package Customers;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
@@ -15,15 +16,17 @@ public class OdialogCustomers extends javax.swing.JDialog {
     
     private final CustomersController customersController = new CustomersController();
     private DefaultTableModel tableModel;
+    private List<CustomersDto> customers = new ArrayList<>();
+    private CustomersDto selectedCustomer = null;
     
     /**
-     * Creates new form OdialogVehiculo
+     * Creates new form OdialogCustomers
      */
     public OdialogCustomers(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         configureTable();
-        loadPaymentMethods();
+        loadCustomers();
     }
     
     private void configureTable() {
@@ -34,25 +37,40 @@ public class OdialogCustomers extends javax.swing.JDialog {
                 return false;
             }
         };
-        vehiculosTable.setModel(tableModel);
+        customersTable.setModel(tableModel);
+        customersTable.removeColumn(customersTable.getColumnModel().getColumn(0));
     }
 
-    public void loadPaymentMethods() {
+    public void loadCustomers() {
         tableModel.setRowCount(0);
-        List<CustomersDto> customers = customersController.getAllCustomers();
-
-        if (customers != null) {
-            for (CustomersDto c : customers) {
-                tableModel.addRow(new Object[]{
-                    c.getIdCustomer(),
-                    c.getName(),
-                    c.getLastName(),
-                    c.getPhone(),
-                    c.getEmail(),
-                    c.getAddress()
-                });
-            }
+        customers = customersController.getAllCustomers();
+        if (customers == null) {
+            customers = new ArrayList<>();
         }
+
+        for (CustomersDto c : customers) {
+            tableModel.addRow(new Object[]{
+                c.getIdCustomer(),
+                c.getName(),
+                c.getLastName(),
+                c.getPhone(),
+                c.getEmail(),
+                c.getAddress()
+            });
+        }
+    }
+
+    private void selectCurrentRow() {
+        int viewRow = customersTable.getSelectedRow();
+        if (viewRow < 0) {
+            return;
+        }
+        selectedCustomer = customers.get(customersTable.convertRowIndexToModel(viewRow));
+        dispose();
+    }
+
+    public CustomersDto getSelectedCustomer() {
+        return selectedCustomer;
     }
 
     /**
@@ -65,11 +83,11 @@ public class OdialogCustomers extends javax.swing.JDialog {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        vehiculosTable = new javax.swing.JTable();
+        customersTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        vehiculosTable.setModel(new javax.swing.table.DefaultTableModel(
+        customersTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -80,7 +98,12 @@ public class OdialogCustomers extends javax.swing.JDialog {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(vehiculosTable);
+        customersTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                customersTableMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(customersTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -95,6 +118,10 @@ public class OdialogCustomers extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void customersTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_customersTableMouseClicked
+        selectCurrentRow();
+    }//GEN-LAST:event_customersTableMouseClicked
 
     /**
      * @param args the command line arguments
@@ -142,7 +169,7 @@ public class OdialogCustomers extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable customersTable;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable vehiculosTable;
     // End of variables declaration//GEN-END:variables
 }

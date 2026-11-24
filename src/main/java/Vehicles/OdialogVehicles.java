@@ -4,6 +4,9 @@
  */
 package Vehicles;
 
+import Categories.CategoriesController;
+import Categories.CategoriesDto;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
@@ -14,10 +17,13 @@ import javax.swing.table.DefaultTableModel;
 public class OdialogVehicles extends javax.swing.JDialog {
     
     private final VehiclesController vehiclesController = new VehiclesController();
+    private final CategoriesController categoriesController = new CategoriesController();
     private DefaultTableModel tableModel;
+    private List<VehiclesDto> vehicles = new ArrayList<>();
+    private VehiclesDto selectedVehicle = null;
     
     /**
-     * Creates new form OdialogVehiculo
+     * Creates new form OdialogVehicles
      */
     public OdialogVehicles(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -34,27 +40,51 @@ public class OdialogVehicles extends javax.swing.JDialog {
                 return false;
             }
         };
-        vehiculosTable.setModel(tableModel);
+        vehiclesTable.setModel(tableModel);
+        vehiclesTable.removeColumn(vehiclesTable.getColumnModel().getColumn(0));
     }
 
     public void loadVehicles() {
         tableModel.setRowCount(0);
-        List<VehiclesDto> vehiculos = vehiclesController.getAllVehicles();
+        vehicles = vehiclesController.getAllVehicles();
+        if (vehicles == null) {
+            vehicles = new ArrayList<>();
+        }
 
-        if (vehiculos != null) {
-            for (VehiclesDto v : vehiculos) {
-                tableModel.addRow(new Object[]{
-                    v.getIdVehicle(),
-                    v.getVin(),
-                    v.getBrand(),
-                    v.getModel(),
-                    v.getYear(),
-                    v.getPrice(),
-                    v.getStatus(),
-                    v.getIdCategory()
-                });
+        
+        java.util.Map<Integer, String> categoryNames = new java.util.HashMap<>();
+        List<CategoriesDto> categories = categoriesController.getAllCategories();
+        if (categories != null) {
+            for (CategoriesDto c : categories) {
+                categoryNames.put(c.getIdCategory(), c.getNameCategory());
             }
         }
+
+        for (VehiclesDto v : vehicles) {
+            tableModel.addRow(new Object[]{
+                v.getIdVehicle(),
+                v.getVin(),
+                v.getBrand(),
+                v.getModel(),
+                v.getYear(),
+                v.getPrice(),
+                v.getStatus(),
+                categoryNames.getOrDefault(v.getIdCategory(), "")
+            });
+        }
+    }
+
+    private void selectCurrentRow() {
+        int viewRow = vehiclesTable.getSelectedRow();
+        if (viewRow < 0) {
+            return;
+        }
+        selectedVehicle = vehicles.get(vehiclesTable.convertRowIndexToModel(viewRow));
+        dispose();
+    }
+
+    public VehiclesDto getSelectedVehicle() {
+        return selectedVehicle;
     }
 
     /**
@@ -67,11 +97,11 @@ public class OdialogVehicles extends javax.swing.JDialog {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        vehiculosTable = new javax.swing.JTable();
+        vehiclesTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        vehiculosTable.setModel(new javax.swing.table.DefaultTableModel(
+        vehiclesTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -82,7 +112,12 @@ public class OdialogVehicles extends javax.swing.JDialog {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(vehiculosTable);
+        vehiclesTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                vehiclesTableMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(vehiclesTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -97,6 +132,10 @@ public class OdialogVehicles extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void vehiclesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_vehiclesTableMouseClicked
+        selectCurrentRow();
+    }//GEN-LAST:event_vehiclesTableMouseClicked
 
     /**
      * @param args the command line arguments
@@ -143,6 +182,6 @@ public class OdialogVehicles extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable vehiculosTable;
+    private javax.swing.JTable vehiclesTable;
     // End of variables declaration//GEN-END:variables
 }
