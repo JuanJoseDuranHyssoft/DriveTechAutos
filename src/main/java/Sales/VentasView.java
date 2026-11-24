@@ -6,7 +6,10 @@ package Sales;
 
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
-import Vehicles.OdialogVehiculo;
+import Vehicles.OdialogVehicles;
+import PaymentMethods.OdialogPaymentMethods;
+import Customers.OdialogCustomers;
+import Employees.OdialogEmployees;
 import drivetech.mainView.DriveTechAutosMain;
 import javax.swing.SwingUtilities;
 
@@ -17,7 +20,10 @@ import javax.swing.SwingUtilities;
 public class VentasView extends javax.swing.JInternalFrame {
 
     private final SalesController salesController = new SalesController();
-    private OdialogVehiculo odialogVehiculo;
+    private OdialogVehicles odialogVehicle;
+    private OdialogPaymentMethods odialogPaymentMethods;
+    private OdialogCustomers odialogCustomers;
+    private OdialogEmployees odialogEmployees;
     private DefaultTableModel tableModel;
 
     /**
@@ -25,13 +31,13 @@ public class VentasView extends javax.swing.JInternalFrame {
      */
     public VentasView() {
         initComponents();
-        configurarTabla();
-        cargarVentas();
+        configureTable();
+        loadSales();
     }
 
-    private void configurarTabla() {
+    private void configureTable() {
         tableModel = new DefaultTableModel(
-                new String[]{"ID Venta", "Fecha Venta", "Precio Final", "ID Vehículo", "ID Cliente", "ID Empleado", "ID Método Pago"}, 0) {
+                new String[]{"ID Venta", "Fecha Venta", "Precio Final", "Vehículo", "Cliente", "Empleado", "Método Pago"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -40,7 +46,7 @@ public class VentasView extends javax.swing.JInternalFrame {
         ventasTable.setModel(tableModel);
     }
 
-    public void cargarVentas() {
+    public void loadSales() {
         tableModel.setRowCount(0);
         List<SalesDto> ventas = salesController.getAllSales();
 
@@ -74,21 +80,21 @@ public class VentasView extends javax.swing.JInternalFrame {
         jLabel2 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        inputIdVenta = new javax.swing.JTextField();
+        inputIdSale = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        inputFechaVentas = new javax.swing.JTextField();
+        inputSaleDate = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        inputPrecioFinal = new javax.swing.JTextField();
+        inputPrice = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         ventasTable = new javax.swing.JTable();
         jLabel6 = new javax.swing.JLabel();
-        inputIdVenta1 = new javax.swing.JTextField();
+        inputOdialogVehicle = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        inputFechaVentas1 = new javax.swing.JTextField();
+        inputOdialogClient = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        inputPrecioFinal1 = new javax.swing.JTextField();
+        inputOdialogPaymentMethods = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        inputIdVenta2 = new javax.swing.JTextField();
+        inputOdialogEmploye = new javax.swing.JTextField();
         btnCrear = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
         btnBuscar = new javax.swing.JButton();
@@ -139,7 +145,7 @@ public class VentasView extends javax.swing.JInternalFrame {
         jLabel3.setFont(new java.awt.Font("Segoe UI Variable", 0, 18)); // NOI18N
         jLabel3.setText("ID Venta");
 
-        inputIdVenta.setEditable(false);
+        inputIdSale.setEditable(false);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI Variable", 0, 18)); // NOI18N
         jLabel4.setText("Fecha Venta");
@@ -163,20 +169,43 @@ public class VentasView extends javax.swing.JInternalFrame {
         jLabel6.setFont(new java.awt.Font("Segoe UI Variable", 0, 18)); // NOI18N
         jLabel6.setText("Vehiculo");
 
-        inputIdVenta1.addMouseListener(new java.awt.event.MouseAdapter() {
+        inputOdialogVehicle.setEditable(false);
+        inputOdialogVehicle.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                inputIdVenta1MouseClicked(evt);
+                inputOdialogVehicleMouseClicked(evt);
             }
         });
 
         jLabel7.setFont(new java.awt.Font("Segoe UI Variable", 0, 18)); // NOI18N
         jLabel7.setText("Cliente");
 
+        inputOdialogClient.setEditable(false);
+        inputOdialogClient.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                inputOdialogClientMouseClicked(evt);
+            }
+        });
+
         jLabel8.setFont(new java.awt.Font("Segoe UI Variable", 0, 18)); // NOI18N
         jLabel8.setText("Metodo de Pago");
 
+        inputOdialogPaymentMethods.setEditable(false);
+        inputOdialogPaymentMethods.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                inputOdialogPaymentMethodsMouseClicked(evt);
+            }
+        });
+        inputOdialogPaymentMethods.addActionListener(this::inputOdialogPaymentMethodsActionPerformed);
+
         jLabel9.setFont(new java.awt.Font("Segoe UI Variable", 0, 18)); // NOI18N
         jLabel9.setText("Empleado");
+
+        inputOdialogEmploye.setEditable(false);
+        inputOdialogEmploye.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                inputOdialogEmployeMouseClicked(evt);
+            }
+        });
 
         btnCrear.setBackground(new java.awt.Color(255, 102, 0));
         btnCrear.setFont(new java.awt.Font("Segoe UI Variable", 0, 14)); // NOI18N
@@ -211,11 +240,11 @@ public class VentasView extends javax.swing.JInternalFrame {
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(inputIdVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(inputFechaVentas, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(inputIdSale, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(inputSaleDate, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                                 .addGap(12, 12, 12)
-                                .addComponent(inputPrecioFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(inputPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -225,17 +254,17 @@ public class VentasView extends javax.swing.JInternalFrame {
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(inputIdVenta1, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(inputFechaVentas1, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(inputOdialogVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(inputOdialogClient, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                                 .addGap(12, 12, 12)
-                                .addComponent(inputPrecioFinal1, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(inputOdialogPaymentMethods, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(inputIdVenta2))
+                                .addComponent(inputOdialogEmploye))
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(btnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -254,33 +283,33 @@ public class VentasView extends javax.swing.JInternalFrame {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
-                            .addComponent(inputIdVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(inputIdSale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(inputFechaVentas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(inputSaleDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(inputPrecioFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(inputPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
-                            .addComponent(inputIdVenta1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(inputOdialogVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel9)
-                            .addComponent(inputIdVenta2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(inputOdialogEmploye, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel7)
-                                    .addComponent(inputFechaVentas1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(inputOdialogClient, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(btnCrear)
                                     .addComponent(btnLimpiar))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel8)
-                                    .addComponent(inputPrecioFinal1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(inputOdialogPaymentMethods, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(btnEditar)))
                             .addComponent(btnBuscar))))
                 .addGap(24, 24, 24)
@@ -321,13 +350,41 @@ public class VentasView extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void inputIdVenta1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inputIdVenta1MouseClicked
-        DriveTechAutosMain ventana = (DriveTechAutosMain) SwingUtilities.getWindowAncestor(this);
+    private void inputOdialogVehicleMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inputOdialogVehicleMouseClicked
+        DriveTechAutosMain window = (DriveTechAutosMain) SwingUtilities.getWindowAncestor(this);
         
-        odialogVehiculo = new OdialogVehiculo(ventana, true);
-        odialogVehiculo.setLocationRelativeTo(ventana);
-        odialogVehiculo.setVisible(true);
-    }//GEN-LAST:event_inputIdVenta1MouseClicked
+        odialogVehicle = new OdialogVehicles(window, true);
+        odialogVehicle.setLocationRelativeTo(window);
+        odialogVehicle.setVisible(true);
+    }//GEN-LAST:event_inputOdialogVehicleMouseClicked
+
+    private void inputOdialogPaymentMethodsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputOdialogPaymentMethodsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inputOdialogPaymentMethodsActionPerformed
+
+    private void inputOdialogPaymentMethodsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inputOdialogPaymentMethodsMouseClicked
+        DriveTechAutosMain window = (DriveTechAutosMain) SwingUtilities.getWindowAncestor(this);
+        
+        odialogPaymentMethods = new OdialogPaymentMethods(window, true);
+        odialogPaymentMethods.setLocationRelativeTo(window);
+        odialogPaymentMethods.setVisible(true);
+    }//GEN-LAST:event_inputOdialogPaymentMethodsMouseClicked
+
+    private void inputOdialogClientMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inputOdialogClientMouseClicked
+        DriveTechAutosMain window = (DriveTechAutosMain) SwingUtilities.getWindowAncestor(this);
+        
+        odialogCustomers = new OdialogCustomers(window, true);
+        odialogCustomers.setLocationRelativeTo(window);
+        odialogCustomers.setVisible(true);
+    }//GEN-LAST:event_inputOdialogClientMouseClicked
+
+    private void inputOdialogEmployeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inputOdialogEmployeMouseClicked
+        DriveTechAutosMain window = (DriveTechAutosMain) SwingUtilities.getWindowAncestor(this);
+        
+        odialogEmployees = new OdialogEmployees(window, true);
+        odialogEmployees.setLocationRelativeTo(window);
+        odialogEmployees.setVisible(true);
+    }//GEN-LAST:event_inputOdialogEmployeMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -335,13 +392,13 @@ public class VentasView extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnCrear;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnLimpiar;
-    private javax.swing.JTextField inputFechaVentas;
-    private javax.swing.JTextField inputFechaVentas1;
-    private javax.swing.JTextField inputIdVenta;
-    private javax.swing.JTextField inputIdVenta1;
-    private javax.swing.JTextField inputIdVenta2;
-    private javax.swing.JTextField inputPrecioFinal;
-    private javax.swing.JTextField inputPrecioFinal1;
+    private javax.swing.JTextField inputIdSale;
+    private javax.swing.JTextField inputOdialogClient;
+    private javax.swing.JTextField inputOdialogEmploye;
+    private javax.swing.JTextField inputOdialogPaymentMethods;
+    private javax.swing.JTextField inputOdialogVehicle;
+    private javax.swing.JTextField inputPrice;
+    private javax.swing.JTextField inputSaleDate;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

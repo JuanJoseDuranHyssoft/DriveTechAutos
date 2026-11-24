@@ -130,13 +130,13 @@
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="inputIdVenta" min="-2" pref="146" max="-2" attributes="0"/>
-                                          <Component id="inputFechaVentas" min="-2" pref="146" max="-2" attributes="0"/>
+                                          <Component id="inputIdSale" min="-2" pref="146" max="-2" attributes="0"/>
+                                          <Component id="inputSaleDate" min="-2" pref="146" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <Group type="102" alignment="1" attributes="0">
                                       <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                                      <Component id="inputPrecioFinal" min="-2" pref="146" max="-2" attributes="0"/>
+                                      <Component id="inputPrice" min="-2" pref="146" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -149,13 +149,13 @@
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="inputIdVenta1" alignment="0" min="-2" pref="146" max="-2" attributes="0"/>
-                                          <Component id="inputFechaVentas1" alignment="0" min="-2" pref="146" max="-2" attributes="0"/>
+                                          <Component id="inputOdialogVehicle" alignment="0" min="-2" pref="146" max="-2" attributes="0"/>
+                                          <Component id="inputOdialogClient" alignment="0" min="-2" pref="146" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <Group type="102" alignment="1" attributes="0">
                                       <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                                      <Component id="inputPrecioFinal1" min="-2" pref="146" max="-2" attributes="0"/>
+                                      <Component id="inputOdialogPaymentMethods" min="-2" pref="146" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -163,7 +163,7 @@
                                   <Group type="102" attributes="0">
                                       <Component id="jLabel9" min="-2" pref="95" max="-2" attributes="0"/>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="inputIdVenta2" max="32767" attributes="0"/>
+                                      <Component id="inputOdialogEmploye" max="32767" attributes="0"/>
                                   </Group>
                                   <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
@@ -191,39 +191,39 @@
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="inputIdVenta" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="inputIdSale" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="inputFechaVentas" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="inputSaleDate" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="inputPrecioFinal" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="inputPrice" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="inputIdVenta1" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="inputOdialogVehicle" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="inputIdVenta2" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="inputOdialogEmploye" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="3" attributes="0">
                                           <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="inputFechaVentas1" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="inputOdialogClient" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="btnCrear" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="btnLimpiar" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="3" attributes="0">
                                           <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="inputPrecioFinal1" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="inputOdialogPaymentMethods" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="btnEditar" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
@@ -247,7 +247,7 @@
                 <Property name="text" type="java.lang.String" value="ID Venta"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="inputIdVenta">
+            <Component class="javax.swing.JTextField" name="inputIdSale">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
               </Properties>
@@ -260,7 +260,7 @@
                 <Property name="text" type="java.lang.String" value="Fecha Venta"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="inputFechaVentas">
+            <Component class="javax.swing.JTextField" name="inputSaleDate">
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel5">
               <Properties>
@@ -270,7 +270,7 @@
                 <Property name="text" type="java.lang.String" value="Precio Final"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="inputPrecioFinal">
+            <Component class="javax.swing.JTextField" name="inputPrice">
             </Component>
             <Container class="javax.swing.JScrollPane" name="jScrollPane1">
               <AuxValues>
@@ -301,9 +301,12 @@
                 <Property name="text" type="java.lang.String" value="Vehiculo"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="inputIdVenta1">
+            <Component class="javax.swing.JTextField" name="inputOdialogVehicle">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+              </Properties>
               <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="inputIdVenta1MouseClicked"/>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="inputOdialogVehicleMouseClicked"/>
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel7">
@@ -314,7 +317,13 @@
                 <Property name="text" type="java.lang.String" value="Cliente"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="inputFechaVentas1">
+            <Component class="javax.swing.JTextField" name="inputOdialogClient">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+              </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="inputOdialogClientMouseClicked"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel8">
               <Properties>
@@ -324,7 +333,14 @@
                 <Property name="text" type="java.lang.String" value="Metodo de Pago"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="inputPrecioFinal1">
+            <Component class="javax.swing.JTextField" name="inputOdialogPaymentMethods">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+              </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="inputOdialogPaymentMethodsMouseClicked"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inputOdialogPaymentMethodsActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel9">
               <Properties>
@@ -334,7 +350,13 @@
                 <Property name="text" type="java.lang.String" value="Empleado"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="inputIdVenta2">
+            <Component class="javax.swing.JTextField" name="inputOdialogEmploye">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+              </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="inputOdialogEmployeMouseClicked"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnCrear">
               <Properties>
